@@ -11,9 +11,9 @@ module.exports = {
   publicPath: process.env.BASE_URL || '/',
   // lintOnSave: false,
   productionSourceMap: false,
-  transpileDependencies: [
-    'element-ui-verify/dist'
-  ],
+  // transpileDependencies: [
+  //   'element-ui-verify/dist'
+  // ],
   configureWebpack: config => {
     // 配置代码压缩
     if (process.env.NODE_ENV === 'production') {
@@ -24,11 +24,11 @@ module.exports = {
             warnings: false,
             compress: {
               drop_debugger: true,
-              drop_console: true,
-            },
+              drop_console: true
+            }
           },
           sourceMap: false,
-          parallel: true,
+          parallel: true
         })
       )
     }
@@ -36,18 +36,19 @@ module.exports = {
   chainWebpack: config => {
     // 增加打包分析
     if (process.env.IS_ANALYZ) {
-      config.plugin('webpack-report')
-        .use(BundleAnalyzerPlugin, [{
-          analyzerMode: 'static',
-        }])
+      config.plugin('webpack-report').use(BundleAnalyzerPlugin, [
+        {
+          analyzerMode: 'static'
+        }
+      ])
     }
     // config.optimization.minimize(false)
 
     const svgRule = config.module.rule('svg')
     svgRule.uses.clear()
-    svgRule.test(/\.svg$/)
-      .include
-      .add(resolve('src/assets/icons/svg'))
+    svgRule
+      .test(/\.svg$/)
+      .include.add(resolve('src/assets/icons/svg'))
       .end()
       .use('svg-spritse-loader')
       .loader('svg-sprite-loader')

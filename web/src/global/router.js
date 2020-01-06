@@ -7,6 +7,13 @@ import system from '../modules/system/router'
 import baseData from '../modules/baseData/router'
 import Page404 from '../modules/common/view/Page404.vue'
 
+// 解决vue-router出现promise未捕获报错
+const originalPush = Router.prototype.push
+Router.prototype.push = function push (location, onResolve, onReject) {
+  if (onResolve || onReject) return originalPush.call(this, location, onResolve, onReject)
+  return originalPush.call(this, location).catch(err => err)
+}
+
 Vue.use(Router)
 
 const router = new Router({
@@ -17,11 +24,7 @@ const router = new Router({
     {
       path: '/',
       component: MainLayout,
-      children: [
-        ...common,
-        ...system,
-        ...baseData
-      ]
+      children: [...common, ...system, ...baseData]
     },
     {
       path: '*',
